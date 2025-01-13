@@ -1,7 +1,32 @@
+import prisma from "@/utils/db";
 import Header from "../components/header/Header";
 import Sidebar from "../components/sidebar/Sidebar";
+import { redirect } from "next/navigation";
+import requireUser from "@/utils/hooks";
+
+async function getUser(userId: string) {
+  const data = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      firstName: true,
+      lastName: true,
+      address: true,
+    },
+  });
+
+  if (!data?.firstName || !data.lastName || !data.address) {
+    redirect("/onboarding");
+  }
+}
 
 async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const session = await requireUser();
+  await getUser(session?.user?.id ?? "");
+
+  console.log(session);
+
   return (
     <div>
       <div className="grid md:grid-cols-[250px_1fr] lg:grid-cols-[280px_1fr]">

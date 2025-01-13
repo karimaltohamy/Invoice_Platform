@@ -14,15 +14,9 @@ import { Menu, Users2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
@@ -60,7 +54,11 @@ const Header = () => {
         {/* profile dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="rounded-full" size={"icon"}>
+            <Button
+              variant="outline"
+              className="rounded-full !border-gray-300"
+              size={"icon"}
+            >
               <Users2 />
             </Button>
           </DropdownMenuTrigger>

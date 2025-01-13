@@ -5,7 +5,11 @@ import { Loader2 } from "lucide-react";
 import React from "react";
 import { useFormStatus } from "react-dom";
 
-const SubmitButton = () => {
+interface Props {
+  title?: string;
+}
+
+const SubmitButton: React.FC<Props> = ({ title = "Submit" }) => {
   const { pending } = useFormStatus();
   return (
     <>
@@ -16,7 +20,7 @@ const SubmitButton = () => {
         </Button>
       ) : (
         <Button type="submit" className="w-full">
-          Submit
+          {title}
         </Button>
       )}
     </>
