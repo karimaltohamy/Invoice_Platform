@@ -7,19 +7,21 @@ import { useFormStatus } from "react-dom";
 
 interface Props {
   title?: string;
+  className?: string;
 }
 
-const SubmitButton: React.FC<Props> = ({ title = "Submit" }) => {
+const SubmitButton: React.FC<Props> = ({ title = "Submit", className }) => {
   const { pending } = useFormStatus();
+
   return (
     <>
       {pending ? (
-        <Button className="w-full" disabled>
+        <Button className={"w-full " + className} disabled>
           <Loader2 className="size-4 mr-2 animate-spin" />
           Please wait...
         </Button>
       ) : (
-        <Button type="submit" className="w-full">
+        <Button type="submit" className={"w-full " + className}>
           {title}
         </Button>
       )}

@@ -38,6 +38,7 @@ const page = () => {
             Enter your information to create your account.
           </CardDescription>
         </CardHeader>
+
         <CardContent>
           <form action={action} onSubmit={form.onSubmit} id={form.id}>
             <div className="grid grid-cols-2 gap-4 mb-4">
