@@ -5,8 +5,21 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import prisma from "@/utils/db";
 import { formatCurrency } from "@/utils/formatCurrency";
 import requireUser from "@/utils/hooks";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
-import { EllipsisVertical } from "lucide-react";
+import {
+  CircleCheckBig,
+  DeleteIcon,
+  DownloadCloud,
+  EllipsisVertical,
+  Mail,
+  Pencil,
+} from "lucide-react";
 import Link from "next/link";
 import React, { use } from "react";
 
@@ -71,7 +84,46 @@ const page = async () => {
                 {format(new Date(invoice.date), "MMM dd, yyyy")}
               </TableCell>
               <TableCell className="text-right">
-                <EllipsisVertical size={18} className="ml-auto" />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant={"secondary"}>
+                      <EllipsisVertical size={18} className="ml-auto" />
+                    </Button>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>
+                      <div className="flex items-center gap-3">
+                        <Pencil size={18} />
+                        <span>Edit Invoice</span>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <div className="flex items-center gap-3">
+                        <DownloadCloud size={18} />
+                        <span>Download Invoice</span>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <div className="flex items-center gap-3">
+                        <Mail size={18} />
+                        <span>Reminder Email</span>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <div className="flex items-center gap-3">
+                        <DeleteIcon size={18} />
+                        <span>Delete Invoice</span>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <div className="flex items-center gap-3">
+                        <CircleCheckBig size={18} />
+                        <span>Mark as Paid</span>
+                      </div>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </TableCell>
             </TableRow>
           ))}

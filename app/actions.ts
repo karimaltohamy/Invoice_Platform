@@ -46,7 +46,7 @@ export const createInvoice = async (prevState: any, formData: FormData) => {
     return result.reply();
   }
 
-  await prisma.invoice.create({
+  const data = await prisma.invoice.create({
     data: {
       invoiceName: result.value.invoiceName,
       total: result.value.total,
@@ -82,7 +82,7 @@ export const createInvoice = async (prevState: any, formData: FormData) => {
         dateStyle: "long",
       }).format(new Date(result.value.date)),
       invoiceAmount: formatCurrency(result.value.total, result.value.currency),
-      invoiceLink: "",
+      invoiceLink: `http://localhost:3000/api/invoice/${data.id}`,
     },
   });
 
