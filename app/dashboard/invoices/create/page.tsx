@@ -49,7 +49,7 @@ const page = () => {
   return (
     <Card>
       <CardContent className="!py-5">
-        <form action={action} onSubmit={form.onSubmit} id={form.id} noValidate>
+        <form action={action} onSubmit={form.onSubmit} id={form.id}>
           <input
             type="hidden"
             name={fields.date.name}
