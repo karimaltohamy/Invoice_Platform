@@ -21,7 +21,8 @@ import {
   Pencil,
 } from "lucide-react";
 import Link from "next/link";
-import React, { use } from "react";
+import React from "react";
+import InvoicesActions from "@/app/components/InvoicesActions/InvoicesActions";
 
 const getData = async (userId: string) => {
   const data = await prisma.invoice.findMany({
@@ -29,12 +30,16 @@ const getData = async (userId: string) => {
       userId: userId,
     },
     select: {
+      id: true,
       invoiceNumber: true,
       status: true,
       date: true,
       total: true,
       clientName: true,
       currency: true,
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
 
@@ -44,8 +49,6 @@ const getData = async (userId: string) => {
 const page = async () => {
   const session = await requireUser();
   const data = await getData(session?.user?.id ?? "");
-
-  console.log(data);
 
   return (
     <Card>
@@ -84,46 +87,7 @@ const page = async () => {
                 {format(new Date(invoice.date), "MMM dd, yyyy")}
               </TableCell>
               <TableCell className="text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant={"secondary"}>
-                      <EllipsisVertical size={18} className="ml-auto" />
-                    </Button>
-                  </DropdownMenuTrigger>
-
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>
-                      <div className="flex items-center gap-3">
-                        <Pencil size={18} />
-                        <span>Edit Invoice</span>
-                      </div>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <div className="flex items-center gap-3">
-                        <DownloadCloud size={18} />
-                        <span>Download Invoice</span>
-                      </div>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <div className="flex items-center gap-3">
-                        <Mail size={18} />
-                        <span>Reminder Email</span>
-                      </div>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <div className="flex items-center gap-3">
-                        <DeleteIcon size={18} />
-                        <span>Delete Invoice</span>
-                      </div>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <div className="flex items-center gap-3">
-                        <CircleCheckBig size={18} />
-                        <span>Mark as Paid</span>
-                      </div>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <InvoicesActions id={invoice.id} />
               </TableCell>
             </TableRow>
           ))}
