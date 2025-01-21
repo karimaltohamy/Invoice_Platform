@@ -3,6 +3,7 @@ import Header from "../components/header/Header";
 import Sidebar from "../components/sidebar/Sidebar";
 import { redirect } from "next/navigation";
 import requireUser from "@/utils/hooks";
+import { Toaster } from "@/components/ui/sonner";
 
 async function getUser(userId: string) {
   const data = await prisma.user.findUnique({
@@ -34,6 +35,7 @@ async function DashboardLayout({ children }: { children: React.ReactNode }) {
           <main className="flex-1 overflow-y-auto p-4">{children}</main>
         </div>
       </div>
+      <Toaster richColors closeButton />
     </div>
   );
 }

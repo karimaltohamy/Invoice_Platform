@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   DropdownMenu,
@@ -15,12 +17,29 @@ import {
   Pencil,
 } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 
 interface Props {
   id: string;
 }
 
 const InvoicesActions: React.FC<Props> = ({ id }) => {
+  const handleReminderEmail = async () => {
+    toast.promise(
+      fetch(`/api/email/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }),
+      {
+        loading: "Sending Reminder Email",
+        success: "Reminder Email Sent",
+        error: "Error Sending Reminder Email",
+      }
+    );
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -40,16 +59,23 @@ const InvoicesActions: React.FC<Props> = ({ id }) => {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <div className="flex items-center gap-3">
+          <Link
+            href={`/api/invoice/${id}`}
+            className="flex items-center gap-3"
+            target="_blank"
+          >
             <DownloadCloud size={18} />
             <span>Download Invoice</span>
-          </div>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <div className="flex items-center gap-3">
+          <button
+            onClick={handleReminderEmail}
+            className="flex items-center gap-3"
+          >
             <Mail size={18} />
             <span>Reminder Email</span>
-          </div>
+          </button>
         </DropdownMenuItem>
         <DropdownMenuItem>
           <div className="flex items-center gap-3">
