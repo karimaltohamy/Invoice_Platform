@@ -1,54 +1,31 @@
+"use client";
+
 import MainTable from "@/app/components/mainTabel/MainTable.component";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { TableCell, TableRow } from "@/components/ui/table";
-import prisma from "@/utils/db";
 import { formatCurrency } from "@/utils/formatCurrency";
-import requireUser from "@/utils/hooks";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
-import {
-  CircleCheckBig,
-  DeleteIcon,
-  DownloadCloud,
-  EllipsisVertical,
-  Mail,
-  Pencil,
-} from "lucide-react";
+
 import Link from "next/link";
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import InvoicesActions from "@/app/components/InvoicesActions/InvoicesActions";
 
-const getData = async (userId: string) => {
-  const data = await prisma.invoice.findMany({
-    where: {
-      userId: userId,
-    },
-    select: {
-      id: true,
-      invoiceNumber: true,
-      status: true,
-      date: true,
-      total: true,
-      clientName: true,
-      currency: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+const page = () => {
+  const [invoices, setInvoices] = useState<any[]>([]);
 
-  return data;
-};
+  const getInvoices = async () => {
+    try {
+      const res = await fetch("/api/invoices").then((res) => res.json());
+      setInvoices(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-const page = async () => {
-  const session = await requireUser();
-  const data = await getData(session?.user?.id ?? "");
+  useEffect(() => {
+    getInvoices();
+  }, []);
 
   return (
     <Card>
@@ -75,9 +52,11 @@ const page = async () => {
             { label: "Actions", className: "text-right" },
           ]}
         >
-          {data.map((invoice: any, i: number) => (
+          {invoices.map((invoice: any, i: number) => (
             <TableRow key={i}>
-              <TableCell>{invoice.invoiceNumber}</TableCell>
+              <TableCell className="font-semibold">
+                #{invoice.invoiceNumber}
+              </TableCell>
               <TableCell>{invoice.clientName}</TableCell>
               <TableCell>
                 {formatCurrency(invoice.total, invoice.currency)}
@@ -87,7 +66,7 @@ const page = async () => {
                 {format(new Date(invoice.date), "MMM dd, yyyy")}
               </TableCell>
               <TableCell className="text-right">
-                <InvoicesActions id={invoice.id} />
+                <InvoicesActions id={invoice.id} getInvoices={getInvoices} />
               </TableCell>
             </TableRow>
           ))}
