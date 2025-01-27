@@ -36,6 +36,7 @@ interface Props {
 
 const InvoicesActions: React.FC<Props> = ({ id, getInvoices }) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openMarkAsPaidModal, setOpenMarkAsPaidModal] = useState(false);
   const dropdownTriggerRef = useRef<any>(null);
   const { data: session } = useSession();
 
@@ -70,6 +71,23 @@ const InvoicesActions: React.FC<Props> = ({ id, getInvoices }) => {
           return "Invoice Deleted";
         },
         error: "Error Deleting Invoice",
+      }
+    );
+  };
+
+  // handle delete invoice
+  const handleMarkAsPaidInvoice = async () => {
+    toast.promise(
+      fetch(`/api/invoice/${id}/paid`, {
+        method: "PUT",
+      }),
+      {
+        loading: "Marking Invoice as Paid...",
+        success: (data) => {
+          getInvoices();
+          return "Invoice Marked as Paid";
+        },
+        error: "Error Marking Invoice as Paid",
       }
     );
   };
@@ -125,10 +143,13 @@ const InvoicesActions: React.FC<Props> = ({ id, getInvoices }) => {
             </button>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <div className="flex items-center gap-3">
+            <button
+              onClick={() => setOpenMarkAsPaidModal(true)}
+              className="flex items-center gap-3"
+            >
               <CircleCheckBig size={18} />
               <span>Mark as Paid</span>
-            </div>
+            </button>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -168,6 +189,50 @@ const InvoicesActions: React.FC<Props> = ({ id, getInvoices }) => {
               }}
             >
               Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* mark as paid modal */}
+      <Dialog
+        open={openMarkAsPaidModal}
+        onOpenChange={(value) => {
+          setOpenMarkAsPaidModal(value);
+          if (!value) {
+            document.body.style.pointerEvents = "auto";
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Are you sure to mark this invoice as paid?
+            </DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently mark your
+              invoice as paid.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setOpenMarkAsPaidModal(false);
+              }}
+            >
+              Cancel
+            </Button>
+
+            <Button
+              variant="default"
+              type="button"
+              onClick={() => {
+                handleMarkAsPaidInvoice();
+                setOpenMarkAsPaidModal(false);
+              }}
+            >
+              Mark as Paid
             </Button>
           </DialogFooter>
         </DialogContent>
